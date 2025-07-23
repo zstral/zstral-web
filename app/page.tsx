@@ -3,29 +3,12 @@ import VantaCanvas from "@/components/VantaCanvas";
 import StatsHighlights from "@/components/StatsHighlights";
 import Timeline from "@/components/Timeline";
 
-const stats = [
-  { title: "05+", subtitle: "Cantidad de proyectos" },
-  { title: "10+", subtitle: "Tecnologías utilizadas" },
-  { title: "03", subtitle: "Certificaciones" },
-]
+import { DataService } from "@/services/DataService";
 
-const items = [
-  {
-    time: "Mayo 2024",
-    title: "Python Essentials I",
-    body: "Fundamentos del lenguaje Python, buenas prácticas, diseño, desarrollo y optimización de programas informáticos."
-  },
-  {
-    time: "2023",
-    title: "Segundo proyecto",
-    body: "Mi segundo proyecto en Next.js"
-  },
-  {
-    time: "2024",
-    title: "Tercer proyecto",
-    body: "Mi tercer proyecto en Next.js"
-  },
-]
+  const service = new DataService();
+
+  const stats = await service.getStats();
+  const items = await service.getTimeline();
 
 export default function Home() {
   return (
@@ -35,9 +18,9 @@ export default function Home() {
           <header className="flex justify-between items-center">
             <div className="flex flex-col space-y-5">
               <h1>¡Hola, bienvenido! ☻</h1>
-              <p className="flex">Mi nombre es<span className="font-bold">&nbsp;Rafael Fernández</span>, soy
-              <span className="text-[#00FF90]">&nbsp;Desarrollador Fullstack</span>.
-              </p>
+              <div className="text-xl">
+                <p>Mi nombre es <span className="font-semibold">Rafael Fernández</span> y soy <span className="text-[#00FF90]">Desarrollador Fullstack</span>.</p>
+              </div>
             </div>
             <div className="p-2 border border-[#4B4B4B] rounded-[20px]">
               <Avatar
@@ -48,7 +31,7 @@ export default function Home() {
             </div>
           </header>
           <aside>
-            <p className="font-light">
+            <p className="text-xl font-light">
               Analista Programador especializado en desarrollo Fullstack,
               orientado a la producción de software integral, eficiente y escalable.
             </p>

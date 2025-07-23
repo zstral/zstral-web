@@ -1,6 +1,6 @@
 import * as React from "react";
 
-interface StatItem {
+export interface StatItem {
     title: string
     subtitle: string
 }

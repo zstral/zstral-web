@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CalendarDays } from "lucide-react";
 
-interface TimelineItem {
+export interface TimelineItem {
     time: string;
     title: string;
     body: string;
