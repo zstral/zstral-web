@@ -1,5 +1,6 @@
 import { TimelineItem } from "@/components/Timeline";
 import { StatItem } from "@/components/StatsHighlights";
+import { TechStackItem } from "@/components/TechStackGrid";
 
 export class DataService {
 
@@ -23,6 +24,10 @@ export class DataService {
 
     public getTimeline(): Promise<TimelineItem[]> {
         return this.get<TimelineItem[]>("timeline.json");
+    }
+
+    public getTechStack(): Promise<TechStackItem[]> {
+        return this.get<TechStackItem[]>("tech_stack.json");
     }
 
 }

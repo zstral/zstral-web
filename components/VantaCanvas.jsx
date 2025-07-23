@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 const VantaCanvas = ({ className = "w-full h-screen" }) => {
     const [vantaEffect, setVantaEffect] = useState(null)
     const myRef = useRef(null)
-    console.log("Cargando VantaCanvas")
     useEffect(() => {
         if (typeof window !== "undefined" && window.VANTA && window.VANTA.NET && !vantaEffect) {
         setVantaEffect(window.VANTA.NET({

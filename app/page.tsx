@@ -2,18 +2,21 @@ import Avatar from "@/components/Avatar";
 import VantaCanvas from "@/components/VantaCanvas";
 import StatsHighlights from "@/components/StatsHighlights";
 import Timeline from "@/components/Timeline";
+import TechStackGrid from "@/components/TechStackGrid";
 
 import { DataService } from "@/services/DataService";
+import Footer from "@/components/Footer";
 
   const service = new DataService();
 
   const stats = await service.getStats();
   const items = await service.getTimeline();
+  const techStack = await service.getTechStack();
 
 export default function Home() {
   return (
     <>
-      <section>
+      <section className="pt-40 pb-20">
         <div className="space-y-10">
           <header className="flex justify-between items-center">
             <div className="flex flex-col space-y-5">
@@ -48,7 +51,11 @@ export default function Home() {
         <h3 className="font-semibold text-xl pb-10 text-[#929292]">Certificaciones</h3>
         <Timeline items={items} />
       </section>
-      
+      <section className="pt-30">
+        <h3 className="text-center font-semibold text-xl pb-10 text-[#929292]">Tecnologías</h3>
+        <TechStackGrid items={techStack} />
+      </section>
+      <Footer />
     </>
   )
 }

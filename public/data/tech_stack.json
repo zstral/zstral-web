@@ -1,0 +1,15 @@
+[
+    { "logoUrl": "/assets/logos/js.png", "alt": "Javascript" },
+    { "logoUrl": "/assets/logos/css.png", "alt": "CSS" },
+    { "logoUrl": "/assets/logos/nextjs.png", "alt": "Next.js" },
+    { "logoUrl": "/assets/logos/csharp.png", "alt": "C#" },
+    { "logoUrl": "/assets/logos/python.png", "alt": "Python" },
+    { "logoUrl": "/assets/logos/oracle.png", "alt": "Oracle" },
+    { "logoUrl": "/assets/logos/git.png", "alt": "Git" },
+    { "logoUrl": "/assets/logos/html.png", "alt": "HTML" },
+    { "logoUrl": "/assets/logos/react.png", "alt": "React" },
+    { "logoUrl": "/assets/logos/tailwind.webp", "alt": "Tailwind" },
+    { "logoUrl": "/assets/logos/java.png", "alt": "Java" },
+    { "logoUrl": "/assets/logos/django.png", "alt": "Django" },
+    { "logoUrl": "/assets/logos/mysql.png", "alt": "MySQL" }
+]
