@@ -1,0 +1,15 @@
+[
+    {
+        "imgSrc": "/assets/logos/graduation-cap.png",
+        "description": "Duoc UC \n Analista Programador",
+        "width": 50,
+        "height": 50
+    },
+    {
+        "imgSrc": "/assets/logos/code.png",
+        "description": "Fullstack Developer",
+        "width": 50,
+        "height": 50
+    }
+
+]

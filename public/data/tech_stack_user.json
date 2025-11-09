@@ -1,0 +1,6 @@
+[
+    { "logoUrl": "/assets/logos/nextjs.png", "alt": "Javascript" },
+    { "logoUrl": "/assets/logos/python.png", "alt": "CSS" },
+    { "logoUrl": "/assets/logos/mysql.png", "alt": "HTML" },
+    { "logoUrl": "/assets/logos/oracle.png", "alt": "React" }
+]

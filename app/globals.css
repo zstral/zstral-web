@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@plugin "flowbite-react/plugin/tailwindcss";
-@source "../.flowbite-react/class-list.json";
 
 :root {
   --background: #ffffff;
@@ -23,7 +21,8 @@
 
 @layer components {
   .navbar-button {
-    @apply px-10 py-3 rounded-full bg-[#0000004D] border border-[#4D4D4D]
+    @apply flex w-[130px] h-[50px] justify-center items-center rounded-full 
+          bg-[#0000004D] border border-[#4D4D4D]
            transition duration-300 hover:bg-[#2020204d]
   }
 
@@ -34,6 +33,7 @@
     rgba(0, 0, 0, 0.99) 65%,
     rgba(0, 0, 0, 0.99) 100%
   );
+
 }
 }
 
@@ -52,5 +52,5 @@ h2 {
 }
 
 section {
-  @apply w-full px-60
+  @apply w-full px-40
 }

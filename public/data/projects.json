@@ -1,0 +1,16 @@
+[
+    {
+        "imgSrc": "/assets/images/wlmxwsp.png",
+        "imgAlt": "WLMxWhatsapp",
+        "title": "WLMxWhatsapp Landing Page",
+        "description": "Desarrollo de la página de presentación para WLMxWhatsapp, un cliente de Whatsapp que integra la interfaz clásica de Windows Live Messenger.",
+        "link": "https://ltunix.github.io/WLMxWhatsapp/index.html"
+    },
+    {
+        "imgSrc": "/assets/images/bscrud.png",
+        "imgAlt": "BSCRUD",
+        "title": "BS_CRUD",
+        "description": "Desarrollo de una API básica para la gestión de Items utilizando .NET 9.0 y Entity Framework Core, implementando operaciones CRUD y documentación con Swagger.",
+        "link": "https://github.com/zstral/BS_CRUD"
+    }
+]

@@ -11,7 +11,9 @@ import Footer from "@/components/Footer";
 
   const stats = await service.getStats();
   const items = await service.getTimeline();
-  const techStack = await service.getTechStack();
+
+  const techStackItems = "tech_stack.json";
+  const techStack = await service.getTechStack(techStackItems);
 
 export default function Home() {
   return (
