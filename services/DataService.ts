@@ -7,7 +7,7 @@ import { CarouselItem } from "@/components/Carousel";
 export class DataService {
 
     // For production, change the baseUrl to the API endpoint.
-    private baseUrl = "http://localhost:3000/data"
+    private baseUrl = "https://zstral.vercel.com/data"
 
     private async get<T>(fileName: string): Promise<T> {
         const res = await fetch(`${this.baseUrl}/${fileName}`, {
