@@ -6,9 +6,8 @@ import { CarouselItem } from "@/components/Carousel";
 
 export class DataService {
 
-    // For production, change the baseUrl to the API endpoint.
-    private baseUrl = "/data"
-
+    private baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    
     private async get<T>(fileName: string): Promise<T> {
         const res = await fetch(`${this.baseUrl}/${fileName}`, {
             cache: "no-store",
