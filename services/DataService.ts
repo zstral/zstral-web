@@ -7,7 +7,7 @@ import { CarouselItem } from "@/components/Carousel";
 export class DataService {
     
     private async get<T>(fileName: string): Promise<T> {
-        const res = await fetch(`${fileName}`, {
+        const res = await fetch(`/${fileName}`, {
             cache: "no-store",
         });
         if (!res.ok) {
