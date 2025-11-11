@@ -5,11 +5,9 @@ import { CardItem } from "@/components/Card";
 import { CarouselItem } from "@/components/Carousel";
 
 export class DataService {
-
-    private baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     
     private async get<T>(fileName: string): Promise<T> {
-        const res = await fetch(`${this.baseUrl}/${fileName}`, {
+        const res = await fetch(`${fileName}`, {
             cache: "no-store",
         });
         if (!res.ok) {
