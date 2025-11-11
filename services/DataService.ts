@@ -11,7 +11,7 @@ export class DataService {
     
     private async get<T>(fileName: string): Promise<T> {
 
-         const filePath = path.join(process.cwd(), 'public', fileName);
+         const filePath = path.join(process.cwd(), 'public', 'data', fileName);
 
         try {
             const fileData = await fs.readFile(filePath, 'utf8');
