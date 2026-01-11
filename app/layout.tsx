@@ -14,6 +14,9 @@ const inter = Inter ({
 export const metadata: Metadata = {
   title: "Portafolio | Rafael Fernández",
   description: "Portafolio de Rafael Fernández con Next.js, React y Tailwind CSS",
+  robots: process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production' 
+    ? 'noindex, nofollow' 
+    : 'index, follow',
 };
 
 export default function RootLayout({
