@@ -3,7 +3,6 @@ import Script from "next/script";
 import { Inter } from "next/font/google";
 import { Topbar } from "@/components/Topbar";
 import Navbar from "@/components/Navbar";
-import PageTransition from "@/components/animation/PageTransition";
 import "./globals.css";
 
 const inter = Inter ({
@@ -37,9 +36,7 @@ export default function RootLayout({
       >
         <Topbar />
         <main>
-          <PageTransition>
-            {children}
-          </PageTransition>
+            {children} 
         </main>
         <Navbar />
       </body>
