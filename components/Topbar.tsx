@@ -15,13 +15,42 @@ export function Topbar(): React.JSX.Element {
     return (
         <div className="fixed place-self-center top-0 z-10 w-full">
             <div className="flex justify-between p-10">
-                <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+
+                <button 
+                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                    className="cursor-pointer"
+                >
                     {mounted && theme === "light" ? <Moon strokeWidth={1}/> : <Sun strokeWidth={1}/>}
                 </button>
+
                 <div className="flex gap-4">
-                    <Linkedin />
-                    <Github />
-                    <Mail strokeWidth={1} />
+                    <button>
+                        <a
+                            href="https://www.linkedin.com/in/zstral"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Linkedin />
+                        </a>
+                    </button>
+                    <button>
+                        <a
+                            href="https://www.github.com/zstral"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Github />
+                        </a>
+                    </button>
+                    <button>
+                        <a
+                            href="mailto:rafaelfernandezgalleguillos@outlook.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Mail strokeWidth={1} />
+                        </a>
+                    </button>   
                 </div>
             </div>
         </div>
