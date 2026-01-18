@@ -24,7 +24,7 @@ function TimelineIcon() {
 }
 
 function TimelineConnector() {
-    return <div className="flex-1 h-[2px] bg-[#ffffff33] ml-2" />;
+    return <div className="flex-1 h-[2px] bg-[#ffffff33] ml-2 light:bg-[#30303033]" />;
 }
 
 function TimelineHeader() {

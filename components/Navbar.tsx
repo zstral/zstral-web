@@ -4,10 +4,10 @@ import Link from 'next/link'
 export default function Navbar(): React.JSX.Element {
     return (
         <nav className="fixed place-self-center p-[5px] inset-x-0 bottom-10 w-xl
-                        bg-[#0000004D] border border-[#4D4D4D] backdrop-blur-sm
-                        rounded-full"
+                        bg-[#0000004D] light:bg-[#50505007] border border-[#4D4D4D] light:border-[#929292]
+                        backdrop-blur-sm rounded-full"
             >
-            <ul className="flex justify-between gap-10 font-extralight text-sm text-white">
+            <ul className="flex justify-between gap-10 font-extralight text-sm text-white light:text-black">
                 <Link href="/">
                     <li className="navbar-button">Inicio</li>
                 </Link>

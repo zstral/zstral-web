@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  --background: #000000;
+  --foreground: #ededed;
+  --overlay-start: rgba(0, 0, 0, 0);
+  --overlay-end: rgba(0, 0, 0, 0.99);
 }
 
 @theme inline {
@@ -12,29 +14,31 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
+.light {
+  --background: #ffffff;
+  --foreground: #000000;
+  --overlay-start: rgba(255, 255, 255, 0);
+  --overlay-end: rgba(255, 255, 255, 0.99);
 }
 
+@custom-variant light (&:where(.light, .light *));
+
 @layer components {
+
   .navbar-button {
     @apply flex w-[130px] h-[50px] justify-center items-center rounded-full 
-          bg-[#0000004D] border border-[#4D4D4D]
+          bg-[#0000004D] light:bg-[#00000025] border border-[#4D4D4D] light:border-[#929292]
            transition duration-300 hover:bg-[#2020204d]
   }
 
   .vignette-overlay {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0.99) 65%,
-    rgba(0, 0, 0, 0.99) 100%
-  );
-
-}
+    background: radial-gradient(
+      ellipse at center,
+      var(--overlay-start) 40%,
+      var(--overlay-end) 65%,
+      var(--overlay-end) 100%
+    );
+  }
 }
 
 body {

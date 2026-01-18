@@ -1,5 +1,7 @@
+'use client';
 import * as React from "react";
 import Image from "next/image";
+import Backgrounds from "@/components/Backgrounds";
 
 export interface TechStackItem {
     logoUrl: string;
@@ -13,10 +15,14 @@ interface TechStackGridProps {
 
 function BackgroundSvg() {
     return (
-        <object
-            className="absolute w-[90vw] h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            data="/assets/dlight.svg"
-            type="image/svg+xml"
+        <Backgrounds
+            className="absolute w-[90vw] h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -z-10"
+            src="/assets/dlight-d.svg"
+            lightSrc="/assets/dlight-l.svg"
+            alt="Background Decorative"
+            width={1000}
+            height={1000}
+            priority
         />
     );
 }

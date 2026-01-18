@@ -28,7 +28,7 @@ function StatBlock({ stat }: { stat: StatItem }) {
 
 export default function StatsHighlights({ stats }: StatsHighlightsProps): React.JSX.Element {
     return (
-        <div className="flex justify-center text-center items-center gap-32 text-[#ffffffb3]">
+        <div className="flex justify-center text-center items-center gap-32 text-[#ffffffb3] light:text-[#000000b3]">
             {stats.map((stat, index) => (
                 <StatBlock key={index} stat={stat} />
             ))}

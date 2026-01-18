@@ -56,8 +56,8 @@ function CardButton({ link }: { link?: string }) {
           target="_blank"
           rel="noopener noreferrer"
           className="px-4 py-2 text-sm rounded-full 
-                     border border-[#c5c5c5] text-[#949494] font-normal 
-                     hover:bg-[#c5c5c5] hover:text-[#000000] transition-colors"
+                     border border-[#c5c5c5] light:border-[#868686] text-[#949494] light:text-[#000000] font-normal 
+                     hover:bg-[#c5c5c5] hover:text-[#000000] light:hover:bg-[#868686] light:hover:text-[#000000] transition-colors"
         >
           Ver
         </a>
@@ -70,7 +70,7 @@ function CardContent({ title, description, link }: CardContentProps) {
   return (
     <div className="flex flex-col p-4">
       {title && <h3 className="text-lg font-semibold">{title}</h3>}
-      <p className="mt-2 text-xs text-gray-300 whitespace-pre-line">{description}</p>
+      <p className="mt-2 text-xs text-gray-300 light:text-black whitespace-pre-line">{description}</p>
       <CardButton link={link} />
     </div>
   );
@@ -90,7 +90,7 @@ function CardWrapper({ card, className }: { card: CardItem; className?: string }
       tiltMaxAngleY={8}
     >
       <div
-        className={`bg-[#000000cc] rounded-lg overflow-hidden w-full lg:max-w-64 backdrop-blur-[4px] border border-[#111111] ${className || ""}`}
+        className={`bg-[#000000cc] light:bg-[#30303033] rounded-lg overflow-hidden w-full lg:max-w-64 backdrop-blur-[4px] border border-[#111111] light:border-[#c0c0c0] ${className || ""}`}
       >
         <CardImage imgSrc={card.imgSrc} imgAlt={card.imgAlt} width={card.width} height={card.height} />
         <CardContent title={card.title} description={card.description} link={card.link} />

@@ -62,8 +62,8 @@ function CardContent({ title, description, stack }: {
 
 export default function UserCard({ title, description, stack }: UserCardProps) {
   return (
-    <div className="justify-self-center p-10 bg-[#000000cc] rounded-[20px]
-                    overflow-hidden w-[80%] backdrop-blur-[4px] border border-[#111111]">
+    <div className="justify-self-center p-10 bg-[#000000cc] light:bg-[#30303033] rounded-[20px]
+                    overflow-hidden w-[80%] backdrop-blur-[4px] border border-[#111111] light:border-[#c0c0c0]">
       <CardContent title={title} description={description} stack={stack} />
     </div>
   );
