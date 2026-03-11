@@ -24,7 +24,7 @@ function TimelineIcon() {
 }
 
 function TimelineConnector() {
-    return <div className="flex-1 h-[2px] bg-[#ffffff33] ml-2" />;
+    return <div className="flex-1 h-[2px] bg-[#ffffff33] ml-2 light:bg-[#30303033]" />;
 }
 
 function TimelineHeader() {
@@ -57,7 +57,7 @@ function TimelineBlock({ item }: { item: TimelineItem }) {
 
 export default function TimelineComponent({ items }: TimelineProps): React.JSX.Element {
     return (
-        <div className="relative flex justify-center min-w-full space-x-12">
+        <div className="relative flex flex-col md:flex-row justify-center w-full space-y-12 md:space-y-0 md:space-x-12 border border-[#4B4B4B] rounded-[20px] p-6">
             {items.map((item, index) => (
                 <TimelineBlock key={index} item={item} />
             ))}

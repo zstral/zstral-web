@@ -1,5 +1,7 @@
+'use client';
 import * as React from "react";
 import Image from "next/image";
+import Backgrounds from "@/components/Backgrounds";
 
 export interface TechStackItem {
     logoUrl: string;
@@ -13,10 +15,14 @@ interface TechStackGridProps {
 
 function BackgroundSvg() {
     return (
-        <object
-            className="absolute w-[90vw] h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            data="/assets/dlight.svg"
-            type="image/svg+xml"
+        <Backgrounds
+            className="absolute w-[90vw] h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -z-10"
+            src="/assets/dlight-d.svg"
+            lightSrc="/assets/dlight-l.svg"
+            alt="Background Decorative"
+            width={1000}
+            height={1000}
+            priority
         />
     );
 }
@@ -44,18 +50,17 @@ function ItemName({ item }: { item: TechStackItem }) {
 
 function ItemStackGrid({ item }: { item: TechStackItem }) {
     return (
-        <div className="flex flex-col items-center sm:w-[50px] md:w-[50px] lg:w-[3rem]">
+        <div className="flex flex-col items-center w-[50px] lg:w-[3rem]">
             <ItemImage item={item} />
             <ItemName item={item} />
         </div>
     );
 }
 
-function BodyStackGrid({ rowIndex, items }: { rowIndex: number; items: TechStackItem[] }) {
+function BodyStackGrid({ items }: { items: TechStackItem[] }) {
     return (
         <div
-            className={`flex flex-wrap justify-center gap-6 sm:gap-10 md:gap-14 lg:gap-18
-            ${rowIndex % 2 !== 0 ? "ml-10 sm:ml-2" : ""}`}
+            className="flex flex-wrap justify-center gap-10 sm:gap-14 md:gap-14 lg:gap-18"
         >
             {items.map((item, index) => (
                 <ItemStackGrid key={index} item={item} />
@@ -64,25 +69,52 @@ function BodyStackGrid({ rowIndex, items }: { rowIndex: number; items: TechStack
     );
 }
 
+function calculateDistribution(total: number, cols: number) {
+    const distribution = [];
+    let remaining = total;
+    while (remaining > 0) {
+        const count = Math.min(remaining, cols);
+        distribution.push(count);
+        remaining -= count;
+    }
+    return distribution;
+}
+
 export default function TechStackGrid({ items }: TechStackGridProps): React.JSX.Element {
-    
-    const itemPerRow = [7, 6, 7];
-    let start = 0;
+    const [cols, setCols] = React.useState(7);
+
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setCols(4);
+            } else if (window.innerWidth < 1024) {
+                setCols(5);
+            } else {
+                setCols(7);
+            }
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const rows = React.useMemo(() => {
+        const distribution = calculateDistribution(items.length, cols);
+        let start = 0;
+        return distribution.map((count) => {
+            const chunk = items.slice(start, start + count);
+            start += count;
+            return chunk;
+        });
+    }, [items, cols]);
 
     return (
-        <div className="relative w-full flex flex-col gap-6">
+        <div className="relative items-center w-full flex flex-col gap-6">
             <BackgroundSvg />
-            {itemPerRow.map((count, rowIndex) => {
-                const rowItems = items.slice(start, start + count);
-                start += count;
-                return (
-                    <BodyStackGrid
-                        key={rowIndex}
-                        rowIndex={rowIndex}
-                        items={rowItems}
-                    />
-                );
-            })}
+            {rows.map((rowItems, index) => (
+                <BodyStackGrid key={index} items={rowItems} />
+            ))}
         </div>
     );
 }

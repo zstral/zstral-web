@@ -7,45 +7,49 @@ import TechStackGrid from "@/components/TechStackGrid";
 import { DataService } from "@/services/DataService";
 import Footer from "@/components/Footer";
 
-  const service = new DataService();
+const service = new DataService();
 
-  const stats = await service.getStats();
-  const items = await service.getTimeline();
-
-  const techStackItems = "tech_stack.json";
-  const techStack = await service.getTechStack(techStackItems);
+const stats = await service.getStats();
+const items = await service.getTimeline();
+const techStackItems = "tech_stack.json";
+const techStack = await service.getTechStack(techStackItems);
 
 export default function Home() {
   return (
     <>
-      <section className="pt-40 pb-20">
-        <div className="space-y-10">
-          <header className="flex justify-between items-center">
-            <div className="flex flex-col space-y-5">
-              <h1>¡Hola, bienvenido! ☻</h1>
-              <div className="text-xl">
-                <p>Mi nombre es <span className="font-semibold">Rafael Fernández</span> y soy <span className="text-[#00FF90]">Desarrollador Fullstack</span>.</p>
+      <section className="pt-30 md:pt-40 pb-10 md:pb-20">
+          <header className="flex flex-col md:flex-row justify-between md:items-center gap-4 md:gap-10">
+              <div className="flex flex-row md:flex-col justify-between items-center gap-6 w-full md:w-auto">
+                <div className="space-y-4 md:space-y-6">
+                  <h1>¡Hola, bienvenido! ☻</h1>
+                  <p className="text-base md:text-xl">Mi nombre es <span className="font-semibold">Rafael Fernández</span> y soy <span className="text-[#00FF90]">Desarrollador Fullstack</span>.</p>
+                  <p className="hidden md:block text-base md:text-xl font-light">
+                    Analista Programador especializado en desarrollo Fullstack,
+                    orientado a la producción de software integral, eficiente y escalable.
+                  </p>
+                </div>
+                <div className="md:hidden p-2 border border-[#4B4B4B] rounded-[20px] w-25 h-25 shrink-0">
+                  <Avatar
+                    src="/assets/images/avatar.jpg"
+                    alt="Rafael Fernández"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="p-2 border border-[#4B4B4B] rounded-[20px]">
+              <p className="md:hidden text-base font-light">
+                Analista Programador especializado en desarrollo Fullstack,
+                orientado a la producción de software integral, eficiente y escalable.
+              </p>
+            <div className="hidden md:block p-2 border border-[#4B4B4B] rounded-[20px] w-60 h-60 shrink-0">
               <Avatar
                 src="/assets/images/avatar.jpg"
                 alt="Rafael Fernández"
-                size={80}
               />
             </div>
           </header>
-          <aside>
-            <p className="text-xl font-light">
-              Analista Programador especializado en desarrollo Fullstack,
-              orientado a la producción de software integral, eficiente y escalable.
-            </p>
-          </aside>
-        </div>
       </section>
-      <div className="relative w-full h-[80vh]">
+      <div className="relative w-[100%] h-[80vh]">
         <VantaCanvas className="absolute inset-0 z-0" />
-        <div className="absolute flex justify-center inset-0 px-60 py-38 vignette-overlay">
+        <div className="absolute flex justify-center inset-0 px-4 md:px-60 py-20 md:py-38 vignette-overlay">
           <StatsHighlights stats={stats} />
         </div>
       </div>

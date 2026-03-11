@@ -14,12 +14,12 @@ function StatTitle({ title }: { title: string }) {
 }
 
 function StatSubtitle({ subtitle }: { subtitle: string }) {
-    return <p className="font-light">{subtitle}</p>;
+    return <p className="font-light text-base md:text-xl">{subtitle}</p>;
 }
 
 function StatBlock({ stat }: { stat: StatItem }) {
     return (
-        <div className="w-1/4">
+        <div className="md:w-1/4">
             <StatTitle title={stat.title} />
             <StatSubtitle subtitle={stat.subtitle} />
         </div>
@@ -28,7 +28,7 @@ function StatBlock({ stat }: { stat: StatItem }) {
 
 export default function StatsHighlights({ stats }: StatsHighlightsProps): React.JSX.Element {
     return (
-        <div className="flex justify-center text-center items-center gap-32 text-[#ffffffb3]">
+        <div className="flex flex-col md:flex-row justify-center text-center items-center gap-16 md:gap-32 text-[#ffffffb3] light:text-[#000000b3]">
             {stats.map((stat, index) => (
                 <StatBlock key={index} stat={stat} />
             ))}

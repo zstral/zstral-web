@@ -1,9 +1,11 @@
 'use client'
 import React, { useRef, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 const VantaCanvas = ({ className = "w-full h-screen" }) => {
   const vantaRef = useRef(null)
   const effectRef = useRef(null)
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (
@@ -23,7 +25,7 @@ const VantaCanvas = ({ className = "w-full h-screen" }) => {
         scale: 1.00,
         scaleMobile: 1.00,
         color: 0xff00c3,
-        backgroundColor: 0x0,
+        backgroundColor: theme === 'light' ? 0xffffff : 0x0,
         points: 20.00,
         maxDistance: 10.00,
         spacing: 14.00
@@ -36,7 +38,7 @@ const VantaCanvas = ({ className = "w-full h-screen" }) => {
         effectRef.current = null;
       }
     };
-  }, []);
+  }, [theme]);
 
   return <div ref={vantaRef} className={className}></div>;
 };
