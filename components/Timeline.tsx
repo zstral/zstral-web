@@ -57,7 +57,7 @@ function TimelineBlock({ item }: { item: TimelineItem }) {
 
 export default function TimelineComponent({ items }: TimelineProps): React.JSX.Element {
     return (
-        <div className="relative flex justify-center min-w-full space-x-12">
+        <div className="relative flex flex-col md:flex-row justify-center w-full space-y-12 md:space-y-0 md:space-x-12 border border-[#4B4B4B] rounded-[20px] p-6">
             {items.map((item, index) => (
                 <TimelineBlock key={index} item={item} />
             ))}
