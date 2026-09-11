@@ -9,7 +9,5 @@
     { "logoUrl": "/assets/logos/html.png", "alt": "HTML" },
     { "logoUrl": "/assets/logos/react.png", "alt": "React" },
     { "logoUrl": "/assets/logos/tailwind.webp", "alt": "Tailwind" },
-    { "logoUrl": "/assets/logos/java.png", "alt": "Java" },
-    { "logoUrl": "/assets/logos/django.png", "alt": "Django" },
     { "logoUrl": "/assets/logos/mysql.png", "alt": "MySQL" }
 ]

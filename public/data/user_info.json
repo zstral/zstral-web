@@ -1,15 +1,17 @@
 [
     {
-        "imgSrc": "/assets/logos/graduation-cap.png",
-        "description": "Duoc UC \n Analista Programador",
-        "width": 50,
-        "height": 50
+        "icon": "layers",
+        "title": "Desarrollo Fullstack",
+        "description": "Construcción de aplicaciones web de alto rendimiento combinando backends robustos con interfaces interactivas y accesibles."
     },
     {
-        "imgSrc": "/assets/logos/code.png",
-        "description": "Fullstack Developer",
-        "width": 50,
-        "height": 50
+        "icon": "server",
+        "title": "Arquitectura & Backend",
+        "description": "Diseño de APIs REST escalables, arquitectura limpia, principios SOLID y optimización de consultas en bases de datos relacionales."
+    },
+    {
+        "icon": "shield-check",
+        "title": "Buenas Prácticas & Calidad",
+        "description": "Control de versiones con Git, documentación de endpoints, enfoque en modularidad, mantenimiento y código limpio."
     }
-
 ]

@@ -1,10 +1,24 @@
 [
-    {
-        "imgSrc": "/assets/images/wlmxwsp_l.png",
-        "imgAlt": "WLMxWhatsapp"
-    },
-    {
-        "imgSrc": "/assets/images/bscrud_l.png",
-        "imgAlt": "BSCRUD"
-    }
+  {
+    "id": "wlmxwsp",
+    "imgSrc": "/assets/images/wlmxwsp_l.png",
+    "imgAlt": "WLMxWhatsapp Landing Page",
+    "title": "WLMxWhatsapp",
+    "subtitle": "Landing Page & UI Retro",
+    "description": "Cliente de WhatsApp con la legendaria interfaz retro de Windows Live Messenger 2009. Diseñado para revivir la nostalgia con tecnología web moderna.",
+    "tags": ["HTML5", "CSS3", "JavaScript", "Retro UI"],
+    "liveUrl": "https://ltunix.github.io/WLMxWhatsapp/index.html",
+    "githubUrl": "https://github.com/zstral"
+  },
+  {
+    "id": "bscrud",
+    "imgSrc": "/assets/images/bscrud_l.png",
+    "imgAlt": "BS_CRUD REST API",
+    "title": "BS_CRUD API",
+    "subtitle": "Backend .NET 9.0 & Entity Framework",
+    "description": "API RESTful integral para gestión de datos implementada con arquitectura limpia, C#, EF Core, autenticación segura y documentación interactiva con Swagger UI.",
+    "tags": [".NET 9", "C#", "Entity Framework", "REST API", "Swagger"],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/zstral/BS_CRUD"
+  }
 ]

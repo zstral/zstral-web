@@ -6,6 +6,7 @@ import { StatItem } from "@/components/StatsHighlights";
 import { TechStackItem } from "@/components/TechStackGrid";
 import { CardItem } from "@/components/Card";
 import { CarouselItem } from "@/components/Carousel";
+import { FocusAreaItem } from "@/components/FocusAreas";
 
 export class DataService {
     
@@ -38,6 +39,10 @@ export class DataService {
 
     public getCardItem(file: string): Promise<CardItem[]> {
         return this.get<CardItem[]>(file);
+    }
+
+    public getFocusAreas(file: string): Promise<FocusAreaItem[]> {
+        return this.get<FocusAreaItem[]>(file);
     }
 
     public getCarouselItem(file: string): Promise<CarouselItem[]> {

@@ -1,0 +1,375 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Túnel — fondo WebGL</title>
+<style>
+  :root{ --amber:#f0a83c; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:#000;color:#e7e9ec;font-family:var(--mono);overflow:hidden}
+
+  /* — el componente — */
+  #tunel{position:fixed;inset:0;width:100%;height:100%;display:block;background:#000;
+         opacity:0;transition:opacity .7s ease}
+  #tunel.ready{opacity:1}
+
+  /* — contenido de demostración encima — */
+  .hero{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;
+        padding:0 clamp(20px,5vw,64px) clamp(28px,6vh,64px);pointer-events:none}
+  .eyebrow{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--amber);margin:0 0 18px}
+  h1{margin:0;font-weight:400;font-size:clamp(24px,3.6vw,46px);line-height:1.18;letter-spacing:-.02em;max-width:16ch}
+  h1 em{font-style:normal;color:#8d949e}
+  .stats{margin:20px 0 0;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#6b727c}
+  .stats b{color:#e7e9ec;font-weight:400}
+  @media (max-width:640px){ .hero{justify-content:center} }
+</style>
+
+<canvas id="tunel"></canvas>
+
+<div class="hero">
+  <p class="eyebrow">Componente · WebGL 2</p>
+  <h1>Malla de espaciotiempo, <em>generada cuadro a cuadro en el navegador.</em></h1>
+  <p class="stats">Loop <b>10 s</b> · Giro <b>90°</b> · Zoom <b>30 %</b> · <b>9.720</b> segmentos</p>
+</div>
+
+<script>
+/* ============================================================
+   TÚNEL — fondo generativo en WebGL 2
+   Todo lo ajustable vive en CONFIG. El resto no necesita tocarse.
+   Montaje en tu sitio: copia el <canvas>, el bloque #tunel del CSS
+   y este script. Arranca solo al cargar.
+   ============================================================ */
+
+const CONFIG = {
+  loop:      10,     // segundos por ciclo
+  turn:      90,     // grados de giro por ciclo (se ajusta al sector más cercano)
+  zoom:      0.30,   // 0 = sin zoom · 0.30 = se acerca un 30 % de la distancia
+  rings:     26,     // anillos concéntricos
+  merid:     48,     // líneas radiales
+  depth:     1.15,   // profundidad del embudo
+  camHeight: 3.0,    // altura de la cámara sobre el plano
+  weight:    1.15,   // grosor de línea en píxeles CSS
+  color:     [0.914, 0.922, 0.937],   // #e9ebef
+  vignette:  true,   // degradados negros arriba y abajo
+  mobileScale: 0.7,  // densidad de malla bajo 700 px de ancho
+  maxDPR:    2
+};
+
+/* Constantes de forma: la garganta, el borde y el encuadre.
+   Salieron de calzar la malla contra el SVG original. */
+const RS = 1.25, RMAX = 11, EXPO = 1.5;
+const CAMD = 11.0, TARGET_Y = -2.9, HFOV = 42, REF_ASPECT = 16 / 9;
+const SEG_RING = 200, SEG_MER = 90;
+
+const canvas = document.getElementById('tunel');
+const gl = canvas.getContext('webgl2', {
+  antialias: true, alpha: false, depth: false,
+  premultipliedAlpha: true, powerPreference: 'high-performance'
+});
+
+if (!gl) {
+  canvas.style.background = '#000';
+  console.warn('Sin WebGL 2: el fondo queda en negro. Usa una imagen estática de respaldo.');
+}
+
+/* ---------- shaders ---------- */
+const VERT = `#version 300 es
+precision highp float;
+in vec3 aA;          // extremo A del segmento (por instancia)
+in vec3 aB;          // extremo B del segmento (por instancia)
+in vec2 aCorner;     // x: 0=A 1=B · y: lado -1/+1
+uniform mat4 uView, uProj;
+uniform vec2 uViewport;      // en píxeles de dispositivo
+uniform float uHalf;         // medio grosor en px
+uniform float uNear, uFar;   // rango del desvanecido por profundidad
+out float vSide;             // distancia con signo al eje de la línea, en px
+out float vHalfPx;
+out float vFade;
+
+void main(){
+  vec4 va = uView * vec4(aA, 1.0);
+  vec4 vb = uView * vec4(aB, 1.0);
+  float za = -va.z, zb = -vb.z;
+
+  if (za < 0.08 || zb < 0.08) {          // segmento detrás de la cámara: se descarta
+    gl_Position = vec4(0.0, 0.0, -2.0, 1.0);
+    vSide = 0.0; vHalfPx = 0.0; vFade = 0.0; return;
+  }
+
+  vec4 ca = uProj * va, cb = uProj * vb;
+  vec2 half_vp = uViewport * 0.5;
+  vec2 sa = ca.xy / ca.w * half_vp;
+  vec2 sb = cb.xy / cb.w * half_vp;
+
+  vec2 d = sb - sa;
+  float len = length(d);
+  vec2 nrm = len > 1e-5 ? vec2(-d.y, d.x) / len : vec2(0.0, 0.0);
+
+  float t = clamp((mix(za, zb, aCorner.x) - uNear) / (uFar - uNear), 0.0, 1.0);
+  float core = uHalf * (1.0 - 0.35 * t);   // las líneas lejanas adelgazan
+  float grown = core + 1.0;                // margen de 1 px para el suavizado
+
+  vec4 clip = mix(ca, cb, aCorner.x);
+  clip.xy += (nrm * aCorner.y * grown) / half_vp * clip.w;
+  gl_Position = clip;
+
+  vSide   = aCorner.y * grown;
+  vHalfPx = core;
+  vFade   = 1.0 - 0.80 * t;
+}`;
+
+const FRAG = `#version 300 es
+precision highp float;
+in float vSide; in float vHalfPx; in float vFade;
+uniform vec3 uColor;
+out vec4 frag;
+void main(){
+  float cov = clamp(vHalfPx - abs(vSide) + 0.5, 0.0, 1.0);   // antialiasing analítico
+  float a = vFade * cov;
+  if (a <= 0.002) discard;
+  frag = vec4(uColor * a, a);                                 // alfa premultiplicado
+}`;
+
+const VIG_VERT = `#version 300 es
+void main(){
+  vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`;
+
+const VIG_FRAG = `#version 300 es
+precision highp float;
+uniform vec2 uViewport;
+out vec4 frag;
+void main(){
+  float yTop = 1.0 - gl_FragCoord.y / uViewport.y;
+  float yBot = gl_FragCoord.y / uViewport.y;
+  float a = max(pow(clamp((0.34 - yTop) / 0.34, 0.0, 1.0), 0.75),
+                pow(clamp((0.42 - yBot) / 0.42, 0.0, 1.0), 0.75));
+  frag = vec4(0.0, 0.0, 0.0, a);
+}`;
+
+/* ---------- utilidades GL ---------- */
+function compile(src, type){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+function link(vs, fs){
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(vs, gl.VERTEX_SHADER));
+  gl.attachShader(p, compile(fs, gl.FRAGMENT_SHADER));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+
+let prog, vig, vao, segBuf, cornerBuf, segCount = 0, U = {}, UV = {};
+
+/* ---------- geometría: paraboloide de Flamm ---------- */
+let density = { rings: CONFIG.rings, merid: CONFIG.merid };
+
+function resolveDensity(){
+  const small = innerWidth < 700;
+  const k = small ? CONFIG.mobileScale : 1;
+  // los meridianos se redondean a múltiplo de 4 para que 90° siga cayendo en un sector exacto
+  density.rings = Math.max(8, Math.round(CONFIG.rings * k));
+  density.merid = Math.max(12, Math.round(CONFIG.merid * k / 4) * 4);
+}
+
+function buildGeometry(){
+  const { rings, merid } = density;
+  const zed = r => CONFIG.depth * Math.sqrt(RS * Math.max(r - RS, 0));
+  const zmax = zed(RMAX);
+  const radius = u => RS + (RMAX - RS) * Math.pow(u, EXPO);
+
+  const n = (rings + 1) * SEG_RING + merid * SEG_MER;
+  const data = new Float32Array(n * 6);
+  let o = 0;
+  const put = (ax, ay, az, bx, by, bz) => {
+    data[o++] = ax; data[o++] = ay; data[o++] = az;
+    data[o++] = bx; data[o++] = by; data[o++] = bz;
+  };
+
+  for (let i = 0; i <= rings; i++){
+    const r = radius(i / rings), y = zed(r) - zmax;
+    for (let k = 0; k < SEG_RING; k++){
+      const t0 = 2 * Math.PI * k / SEG_RING, t1 = 2 * Math.PI * (k + 1) / SEG_RING;
+      put(r * Math.cos(t0), y, r * Math.sin(t0), r * Math.cos(t1), y, r * Math.sin(t1));
+    }
+  }
+  for (let m = 0; m < merid; m++){
+    const t = 2 * Math.PI * m / merid, ct = Math.cos(t), st = Math.sin(t);
+    for (let k = 0; k < SEG_MER; k++){
+      const r0 = radius(k / SEG_MER), r1 = radius((k + 1) / SEG_MER);
+      put(r0 * ct, zed(r0) - zmax, r0 * st, r1 * ct, zed(r1) - zmax, r1 * st);
+    }
+  }
+
+  segCount = n;
+  gl.bindBuffer(gl.ARRAY_BUFFER, segBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+}
+
+/* ---------- matrices ---------- */
+const view = new Float32Array(16), proj = new Float32Array(16);
+
+function setProjection(w, h){
+  const aspect = w / h;
+  const vTan = Math.tan(HFOV * Math.PI / 360) / Math.min(aspect, REF_ASPECT);
+  const f = 1 / vTan, near = 0.05, far = 200;
+  proj.fill(0);
+  proj[0] = f / aspect; proj[5] = f;
+  proj[10] = (far + near) / (near - far); proj[11] = -1;
+  proj[14] = 2 * far * near / (near - far);
+}
+
+function setView(angle, k){
+  // la cámara orbita el eje y se acerca al objetivo; girar la cámara == girar la malla
+  const ox = CAMD * Math.sin(angle), oy = CONFIG.camHeight - TARGET_Y, oz = CAMD * Math.cos(angle);
+  const px = ox * k, py = TARGET_Y + oy * k, pz = oz * k;
+
+  let fx = -px, fy = TARGET_Y - py, fz = -pz;
+  let n = Math.hypot(fx, fy, fz); fx /= n; fy /= n; fz /= n;
+  let rx = -fz, ry = 0, rz = fx;
+  n = Math.hypot(rx, ry, rz); rx /= n; ry /= n; rz /= n;
+  const ux = ry * fz - rz * fy, uy = rz * fx - rx * fz, uz = rx * fy - ry * fx;
+
+  view[0]=rx; view[4]=ry; view[8]=rz;   view[12]=-(rx*px+ry*py+rz*pz);
+  view[1]=ux; view[5]=uy; view[9]=uz;   view[13]=-(ux*px+uy*py+uz*pz);
+  view[2]=-fx;view[6]=-fy;view[10]=-fz; view[14]= (fx*px+fy*py+fz*pz);
+  view[3]=0;  view[7]=0;  view[11]=0;   view[15]=1;
+
+  return Math.hypot(px, py - TARGET_Y, pz);   // distancia al objetivo, para el desvanecido
+}
+
+/* ---------- inicialización ---------- */
+function init(){
+  prog = link(VERT, FRAG);
+  vig  = link(VIG_VERT, VIG_FRAG);
+  for (const k of ['uView','uProj','uViewport','uHalf','uNear','uFar','uColor'])
+    U[k] = gl.getUniformLocation(prog, k);
+  UV.uViewport = gl.getUniformLocation(vig, 'uViewport');
+
+  vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
+  cornerBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,-1, 0,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+  const locCorner = gl.getAttribLocation(prog, 'aCorner');
+  gl.enableVertexAttribArray(locCorner);
+  gl.vertexAttribPointer(locCorner, 2, gl.FLOAT, false, 0, 0);
+
+  segBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, segBuf);
+  const locA = gl.getAttribLocation(prog, 'aA'), locB = gl.getAttribLocation(prog, 'aB');
+  gl.enableVertexAttribArray(locA);
+  gl.vertexAttribPointer(locA, 3, gl.FLOAT, false, 24, 0);
+  gl.vertexAttribDivisor(locA, 1);
+  gl.enableVertexAttribArray(locB);
+  gl.vertexAttribPointer(locB, 3, gl.FLOAT, false, 24, 12);
+  gl.vertexAttribDivisor(locB, 1);
+
+  gl.bindVertexArray(null);
+
+  gl.disable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);   // alfa premultiplicado
+  gl.clearColor(0, 0, 0, 1);
+
+  resolveDensity();
+  buildGeometry();
+  resize();
+}
+
+/* ---------- tamaño ---------- */
+let dpr = 1;
+function resize(){
+  dpr = Math.min(devicePixelRatio || 1, CONFIG.maxDPR);
+  const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+  const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+  if (canvas.width === w && canvas.height === h) return;
+  canvas.width = w; canvas.height = h;
+  gl.viewport(0, 0, w, h);
+  setProjection(w, h);
+
+  const before = density.merid;
+  resolveDensity();
+  if (density.merid !== before) buildGeometry();
+}
+
+/* ---------- cuadro ---------- */
+function render(phase){
+  // el giro se ajusta al múltiplo de sector más cercano: así el ciclo empalma exacto
+  const sector = 360 / density.merid;
+  const turn = Math.round(CONFIG.turn / sector) * sector;
+  const angle = turn * Math.PI / 180 * phase;
+  const k = 1 - CONFIG.zoom * 0.5 * (1 - Math.cos(2 * Math.PI * phase));
+
+  const dist = setView(angle, k);
+
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.useProgram(prog);
+  gl.bindVertexArray(vao);
+  gl.uniformMatrix4fv(U.uView, false, view);
+  gl.uniformMatrix4fv(U.uProj, false, proj);
+  gl.uniform2f(U.uViewport, canvas.width, canvas.height);
+  gl.uniform1f(U.uHalf, CONFIG.weight * dpr * 0.5);
+  gl.uniform1f(U.uNear, dist * 0.30);
+  gl.uniform1f(U.uFar,  dist * 2.25);
+  gl.uniform3fv(U.uColor, CONFIG.color);
+  gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, segCount);
+
+  if (CONFIG.vignette){
+    gl.useProgram(vig);
+    gl.uniform2f(UV.uViewport, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  gl.bindVertexArray(null);
+}
+
+/* ---------- reloj y ahorro de energía ---------- */
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+let phase = 0, last = 0, raf = 0, onScreen = true;
+
+function loop(now){
+  raf = requestAnimationFrame(loop);
+  const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
+  last = now;
+  phase = (phase + dt / CONFIG.loop) % 1;
+  render(phase);
+}
+
+function start(){
+  if (raf || reduced.matches) return;
+  last = 0;
+  raf = requestAnimationFrame(loop);
+}
+function stop(){
+  if (!raf) return;
+  cancelAnimationFrame(raf); raf = 0;
+}
+function shouldRun(){ return onScreen && !document.hidden && !reduced.matches; }
+function sync(){ shouldRun() ? start() : stop(); }
+
+/* no gastar GPU si el fondo no está a la vista */
+new IntersectionObserver(e => { onScreen = e[0].isIntersecting; sync(); }, { threshold: 0 })
+  .observe(canvas);
+document.addEventListener('visibilitychange', sync);
+reduced.addEventListener('change', () => { stop(); render(phase); sync(); });
+addEventListener('resize', () => { resize(); if (!raf) render(phase); });
+
+/* la pérdida de contexto es normal al dormir el equipo o cambiar de GPU */
+canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); });
+canvas.addEventListener('webglcontextrestored', () => { init(); render(phase); sync(); });
+
+if (gl){
+  init();
+  render(0);                         // primer cuadro antes de mostrar: nada de destello
+  requestAnimationFrame(() => canvas.classList.add('ready'));
+  sync();
+}
+
+/* API mínima por si quieres controlarlo desde tu sitio */
+window.tunel = { start, stop, render, CONFIG };
+</script>

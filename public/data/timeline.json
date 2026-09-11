@@ -1,17 +1,32 @@
 [
-    {
+  {
+    "id": "cisco-python-1",
     "time": "Mayo 2024",
     "title": "Python Essentials I",
-    "body": "Fundamentos del lenguaje Python, buenas prácticas, diseño, desarrollo y optimización de programas informáticos."
-    },
-    {
+    "subtitle": "Cisco Networking Academy",
+    "body": "Fundamentos del lenguaje Python, buenas prácticas, diseño modular, estructuras de datos y optimización de programas informáticos.",
+    "tags": ["Python", "Algoritmos", "OOP"],
+    "icon": "code",
+    "status": ""
+  },
+  {
+    "id": "cisco-cybersec",
     "time": "Octubre 2024",
     "title": "Seguridad de la Información",
-    "body": "Fundamentos de seguridad digital, protección de datos personales y adopción de hábitos seguros frente a amenazas en línea."
-    },
-    {
+    "subtitle": "Cisco Networking Academy",
+    "body": "Fundamentos de ciberseguridad, defensa en profundidad, protección de datos personales y adopción de hábitos seguros frente a amenazas digitales.",
+    "tags": ["Cybersecurity", "Network Security", "Data Protection"],
+    "icon": "award",
+    "status": ""
+  },
+  {
+    "id": "duoc-uxui",
     "time": "Enero 2025",
     "title": "Diseño Web y Experiencia de Usuario UX/UI",
-    "body": "Desarrollo de interfaces accesibles con HTML5 y CSS. Fundamentos de Design Thinking y experiencia de usuario."
-    }
+    "subtitle": "Duoc UC",
+    "body": "Desarrollo de interfaces accesibles con estándares modernos HTML5 y CSS3. Aplicación práctica de metodologías Design Thinking y evaluación heurística de UX.",
+    "tags": ["UX/UI", "Design Thinking", "HTML5/CSS3", "Figma"],
+    "icon": "certificate",
+    "status": ""
+  }
 ]

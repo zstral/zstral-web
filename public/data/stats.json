@@ -1,5 +1,20 @@
-[   
-    { "title": "05+", "subtitle": "Cantidad de proyectos" },
-    { "title": "10+", "subtitle": "Tecnologías utilizadas" },
-    { "title": "03", "subtitle": "Certificaciones" }
+[
+  {
+    "value": 5,
+    "suffix": "+",
+    "subtitle": "Proyectos desarrollados",
+    "icon": "projects"
+  },
+  {
+    "value": 10,
+    "suffix": "+",
+    "subtitle": "Tecnologías utilizadas",
+    "icon": "tech"
+  },
+  {
+    "value": 3,
+    "prefix": "0",
+    "subtitle": "Certificaciones técnicas",
+    "icon": "certifications"
+  }
 ]

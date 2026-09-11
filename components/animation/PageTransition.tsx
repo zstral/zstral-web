@@ -39,6 +39,10 @@ useEffect(() => {
       opacity: 1,
       x: 0,
       filter: "blur(0px)",
+      transitionEnd: {
+        transform: "none",
+        filter: "none",
+      },
     },
     exit: (direction: number) => ({
       opacity: 0,
