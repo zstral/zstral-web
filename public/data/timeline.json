@@ -28,5 +28,15 @@
     "tags": ["UX/UI", "Design Thinking", "HTML5/CSS3", "Figma"],
     "icon": "certificate",
     "status": ""
+  },
+  {
+    "id": "bc-english-b2",
+    "time": "Diciembre 2025",
+    "title": "Inglés B2 Upper Intermediate",
+    "subtitle": "British Council",
+    "body": "Competencia lingüística avanzada para comunicación fluida, redacción técnica, comprensión de documentación compleja e interacción profesional en entornos globales.",
+    "tags": ["Inglés", "B2 Upper Intermediate", "Comunicación Técnica"],
+    "icon": "award",
+    "status": ""
   }
 ]

@@ -259,14 +259,17 @@ export default function Timeline({
       )}
 
       {variant === "horizontal" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-          {visibleItems.map((item, index) => (
-            <HorizontalTimelineItem
-              key={item.id ?? index}
-              item={item}
-              isLast={index === visibleItems.length - 1}
-            />
-          ))}
+        <div className="w-full overflow-x-auto custom-scrollbar pb-4 pt-1 px-1">
+          <div className="flex items-stretch gap-6 min-w-max">
+            {visibleItems.map((item, index) => (
+              <div key={item.id ?? index} className="w-[280px] sm:w-[320px] shrink-0 flex">
+                <HorizontalTimelineItem
+                  item={item}
+                  isLast={index === visibleItems.length - 1}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
