@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { Moon, Sun, Mail } from "lucide-react";
 import { Github } from "./icon/Github";
 import { Linkedin } from "./icon/Linkedin";
@@ -13,16 +14,35 @@ export function Topbar(): React.JSX.Element {
     React.useEffect(() => setMounted(true), []);
 
     return (
-        <div className="fixed place-self-center top-0 z-10 w-full">
-            <div className="absolute top-0 left-0 bottom-0 right-0 md:right-4 backdrop-blur-xl [mask-image:linear-gradient(to_top,transparent_0%,rgba(0,0,0,0.05)_10%,rgba(0,0,0,0.35)_25%,rgba(0,0,0,0.85)_50%,rgba(0,0,0,0.95)_60%,rgba(0,0,0,0.99)_75%,black_100%)] -z-10" />
+        <div className="fixed place-self-center top-0 z-50 w-full">
+            <div className="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_top,transparent_0%,rgba(0,0,0,0.05)_10%,rgba(0,0,0,0.35)_25%,rgba(0,0,0,0.85)_50%,rgba(0,0,0,0.95)_60%,rgba(0,0,0,0.99)_75%,black_100%)] -z-10" />
             <div className="flex justify-between p-10">
 
-                <button 
-                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                    className="cursor-pointer"
-                >
-                    {mounted && theme === "light" ? <Moon strokeWidth={1}/> : <Sun strokeWidth={1}/>}
-                </button>
+                <div className="flex items-center gap-6">
+                    <Image
+                        src="/assets/logos/logo-zstral.svg"
+                        alt="Zstral"
+                        width={118}
+                        height={25}
+                        priority
+                        className="light:hidden"
+                    />
+                    <Image
+                        src="/assets/logos/logo-zstral-b.svg"
+                        alt="Zstral"
+                        width={118}
+                        height={25}
+                        priority
+                        className="hidden light:block"
+                    />
+
+                    <button
+                        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                        className="cursor-pointer"
+                    >
+                        {mounted && theme === "light" ? <Moon strokeWidth={1}/> : <Sun strokeWidth={1}/>}
+                    </button>
+                </div>
 
                 <div className="flex gap-4">
                     <button>
@@ -53,6 +73,7 @@ export function Topbar(): React.JSX.Element {
                         </a>
                     </button>   
                 </div>
+                
             </div>
         </div>
     )

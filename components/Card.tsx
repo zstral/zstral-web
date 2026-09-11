@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
+import { ArrowUpRight } from "lucide-react";
 
 export interface CardItem {
   imgSrc: string;
@@ -23,25 +24,38 @@ interface CardImageProps {
   imgAlt?: string;
   width?: number;
   height?: number;
-}
-
-interface CardContentProps {
   title?: string;
-  description: string;
-  link?: string;
 }
 
-function CardImage({ imgSrc, imgAlt, width = 300, height = 160 }: CardImageProps) {
+function CardImage({ imgSrc, imgAlt, width, height, title }: CardImageProps) {
+  if (width && height) {
+    return (
+      <div className="shrink-0 flex items-center justify-center">
+        <Image
+          src={imgSrc}
+          alt={imgAlt || title || ""}
+          width={width}
+          height={height}
+          quality={80}
+          loading="lazy"
+          className="object-contain"
+        />
+      </div>
+    );
+  }
+
   return (
-    <Image
-      src={imgSrc}
-      alt={imgAlt || ""}
-      width={width}
-      height={height}
-      quality={40}
-      loading="lazy"
-      className="object-cover"
-    />
+    <div className="relative w-full aspect-[16/10] overflow-hidden bg-black/30 border-b border-[#262626] light:border-[#e5e5e5]">
+      <Image
+        src={imgSrc}
+        alt={imgAlt || title || ""}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+        quality={85}
+        loading="lazy"
+        className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+      />
+    </div>
   );
 }
 
@@ -49,51 +63,69 @@ function CardButton({ link }: { link?: string }) {
   if (!link) return null;
 
   return (
-    <div className="flex justify-end mt-8">
-      <button>
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 text-sm rounded-full 
-                     border border-[#c5c5c5] light:border-[#868686] text-[#949494] light:text-[#000000] font-normal 
-                     hover:bg-[#c5c5c5] hover:text-[#000000] light:hover:bg-[#868686] light:hover:text-[#000000] transition-colors"
-        >
-          Ver
-        </a>
-      </button>
-    </div>
-  );
-}
-
-function CardContent({ title, description, link }: CardContentProps) {
-  return (
-    <div className="flex flex-col p-4">
-      {title && <h3 className="text-lg font-semibold">{title}</h3>}
-      <p className="mt-2 text-xs text-gray-300 light:text-black whitespace-pre-line">{description}</p>
-      <CardButton link={link} />
+    <div className="flex justify-end pt-3 mt-auto border-t border-[#262626]/60 light:border-[#e5e5e5]/60">
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-full 
+                   border border-[#4B4B4B] light:border-[#c0c0c0] text-[#ededed] light:text-[#111111] 
+                   hover:border-white hover:text-white light:hover:border-black light:hover:text-black 
+                   hover:bg-white/5 light:hover:bg-black/5 transition-all duration-200"
+      >
+        <span>Ver proyecto</span>
+        <ArrowUpRight size={14} className="shrink-0" />
+      </a>
     </div>
   );
 }
 
 function CardWrapper({ card, className }: { card: CardItem; className?: string }) {
+  const isCompact = Boolean(card.width && card.height);
+
   return (
     <Tilt
       glareEnable
-      glareBorderRadius="0.5rem"
-      glareMaxOpacity={0.2}
-      glarePosition="top"
+      glareBorderRadius={isCompact ? "0.75rem" : "1rem"}
+      glareMaxOpacity={0.15}
+      glarePosition="all"
       glareReverse
-      scale={1.08}
+      scale={isCompact ? 1.05 : 1.02}
       tiltReverse
-      tiltMaxAngleX={10}
-      tiltMaxAngleY={8}
+      tiltMaxAngleX={isCompact ? 10 : 5}
+      tiltMaxAngleY={isCompact ? 8 : 5}
+      className={isCompact ? "" : "h-full w-full max-w-[420px]"}
     >
       <div
-        className={`bg-[#000000cc] light:bg-[#30303033] rounded-lg overflow-hidden w-full lg:max-w-64 backdrop-blur-[4px] border border-[#111111] light:border-[#c0c0c0] ${className || ""}`}
+        className={
+          className ||
+          `group relative flex flex-col h-full w-full rounded-2xl overflow-hidden 
+           bg-[#000000cc] light:bg-[#30303033] backdrop-blur-[4px] 
+           border border-[#111111] light:border-[#c0c0c0] 
+           hover:border-[#333333] light:hover:border-[#999999] 
+           transition-all duration-300`
+        }
       >
-        <CardImage imgSrc={card.imgSrc} imgAlt={card.imgAlt} width={card.width} height={card.height} />
-        <CardContent title={card.title} description={card.description} link={card.link} />
+        <CardImage
+          imgSrc={card.imgSrc}
+          imgAlt={card.imgAlt}
+          width={card.width}
+          height={card.height}
+          title={card.title}
+        />
+        <div className={`flex flex-col flex-1 justify-between ${isCompact ? "p-4" : "p-5 md:p-6 gap-4"}`}>
+          <div>
+            {card.title && (
+              <h3 className="text-base md:text-lg font-semibold text-[#f3f3f3] light:text-[#111111] tracking-tight">
+                {card.title}
+              </h3>
+            )}
+            <p className="mt-2 text-xs md:text-sm text-[#929292] light:text-[#555555] leading-relaxed whitespace-pre-line">
+              {card.description}
+            </p>
+          </div>
+          <CardButton link={card.link} />
+        </div>
       </div>
     </Tilt>
   );
@@ -101,10 +133,11 @@ function CardWrapper({ card, className }: { card: CardItem; className?: string }
 
 export default function Card({ cards, wrapperClassName }: CustomCardProps) {
   return (
-    <div className="flex flex-wrap justify-center items-start gap-10">
+    <div className="flex flex-wrap justify-center items-stretch gap-6 md:gap-8 w-full max-w-6xl mx-auto">
       {cards.map((card, index) => (
         <CardWrapper key={index} card={card} className={wrapperClassName} />
       ))}
     </div>
   );
 }
+

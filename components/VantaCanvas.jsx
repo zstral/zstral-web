@@ -24,7 +24,7 @@ const VantaCanvas = ({ className = "w-full h-screen" }) => {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color: 0xff00c3,
+        color: 0x02B854,
         backgroundColor: theme === 'light' ? 0xffffff : 0x0,
         points: 20.00,
         maxDistance: 10.00,

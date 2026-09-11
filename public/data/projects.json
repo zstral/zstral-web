@@ -1,5 +1,12 @@
 [
     {
+        "imgSrc": "/assets/images/jm-internacional.png",
+        "imgAlt": "JM Internacional Web Corporativa",
+        "title": "JM Internacional - Sitio Web Corporativo",
+        "description": "Desarrollo de plataforma web corporativa 100% autoadministrable, construida con arquitectura modular de bloques ACF, Tailwind CSS v4, contenedorización en Docker, formularios interactivos con validación en tiempo real y alto estándar de rendimiento.",
+        "link": "https://www.jminternacional.cl"
+    },
+    {
         "imgSrc": "/assets/images/wlmxwsp.png",
         "imgAlt": "WLMxWhatsapp",
         "title": "WLMxWhatsapp Landing Page",

@@ -11,7 +11,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 .light {
@@ -31,6 +31,62 @@
           border border-[#4D4D4D] light:border-[#929292] hover:bg-[#2020204d];
     @apply w-full;
     @apply h-[clamp(40px,4.7vh,45px)] md:h-[clamp(50px,5.5vh,60px)];
+  }
+
+  /* Grilla de caracteres del hero ASCII. El alto de línea debe coincidir
+     exactamente con el tamaño de celda usado al muestrear la imagen. */
+  .ascii-layer {
+    /* `@apply font-mono` y no `var(--font-mono)`: con `@theme inline` esa
+       variable no se emite, el var() queda vacío y la regla se invalida,
+       heredando la tipografía proporcional del body. */
+    @apply font-mono;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0;
+    white-space: pre;
+    margin: 0;
+  }
+
+  .ascii-grain {
+    color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Los glifos se "pintan" con la propia foto recortada al texto. */
+  .ascii-paint {
+    color: transparent;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: grayscale(1) brightness(1.9) contrast(0.95);
+  }
+
+  /* Resplandor radial que sigue al puntero: la capa repite los mismos glifos
+     y el mask decide cuánto de ese brillo se ve en cada celda. */
+  .ascii-glow {
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(0, 255, 144, 0.5);
+    mix-blend-mode: screen;
+    opacity: var(--glow-o, 0);
+    transition: opacity 300ms ease-out;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: radial-gradient(
+      circle var(--glow-r, 260px) at var(--glow-x, -9999px) var(--glow-y, -9999px),
+      #000 0%,
+      rgba(0, 0, 0, 0.82) 20%,
+      rgba(0, 0, 0, 0.42) 45%,
+      rgba(0, 0, 0, 0.12) 72%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      circle var(--glow-r, 260px) at var(--glow-x, -9999px) var(--glow-y, -9999px),
+      #000 0%,
+      rgba(0, 0, 0, 0.82) 20%,
+      rgba(0, 0, 0, 0.42) 45%,
+      rgba(0, 0, 0, 0.12) 72%,
+      transparent 100%
+    );
   }
 
   .vignette-overlay {
